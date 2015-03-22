@@ -77,15 +77,34 @@ queue({label}, {list})			*Vital.ConcurrentProcess.queue()*
 consume({label}, {varname})		*Vital.ConcurrentProcess.consume()*
 	TODO
 
-consume_all_blocking({label}, {varname})
+consume_all_blocking({label}, {varname}, {timeout-sec})
 			*Vital.ConcurrentProcess.consume_all_blocking()*
-	TODO
+	This is an action |Vital.ConcurrentProcess-term.action|, and does
+	similar to consume() described above, but this doesn't immediately
+	return the current output but blocks until the end of the read of the
+	given {varname}, at most {timeout-sec} seconds. This also returns a
+	0/1 value as the 3rd element of the list to tell if it has timed out
+	or not.
+>
+	" get stdout/stderr for the var x, with blocking at worst 10 seconds.
+	let [out, err, timeout_p] =
+	      \ s:CP.consume_all_blocking(label, 'x', 10)
+	if timeout_p
+	  " omg it timed out!
+	else
+	  " yes it completed without 10 seconds. Do normal stuff here
+	endif
+<
+	For your info this function is internally using is_done() described
+	below.
 
-is_done({label}, {rname})		*Vital.ConcurrentProcess.is_done()*
-	TODO
+is_done({label}, {varname})		*Vital.ConcurrentProcess.is_done()*
+	This is an action |Vital.ConcurrentProcess-term.action|, and checks
+	if the read operation of given {varname} has completed. You are
+	particularly expected to use this function when you use consume().
 
 is_busy({label})			*Vital.ConcurrentProcess.is_busy()*
-	TODO
+	This is an action |Vital.ConcurrentProcess-term.action|, and checks
 
 shutdown({label})			*Vital.ConcurrentProcess.shutdown()*
 	TODO
